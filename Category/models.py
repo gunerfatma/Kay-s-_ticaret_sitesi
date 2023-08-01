@@ -8,7 +8,7 @@ class Category(models.Model):
     cat_image = models.ImageField( upload_to = 'foto/categories', blank = True)
 
     class Meta:
-        verbose_name ='Category'
+        verbose_name ='category'
         verbose_name_plural = 'categories'
 
     def get_url(self):

@@ -11,71 +11,81 @@
     <!-- ============================ COMPONENT 1 ================================= -->
     <div class="card">
         <div class="row no-gutters">
-            <aside class="col-md-6">
+            <aside class="col-md-3">
     <article class="gallery-wrap"> 
-        <div class="img-big-wrap">
-           <a href="#"><img src="{{single_urun.images.url}}"></a>
-        </div> <!-- img-big-wrap.// -->
+        <div class="img-big-wrap mainImage">
+            <center><img src="{{ single_urun.images.url }}"></center>
+        </div> 
         
-    </article> <!-- gallery-wrap .end// -->
+    </article> 
+    <ul class="thumb">
+        <li>
+            <a href="{{ single_urun.images.url }}" target="mainImage"><img src="{{ single_urun.images.url }}" alt="Product Image" width="200" height="100" ></a>
+            {% for i in product_gallery %}
+            <a href="{{i.image.url}}" target="mainImage"><img src="{{i.image.url}}" alt="Product Image"style="width:200px;height:200px;"></a>
+            {% endfor %}
+        </li>
+    </ul>
             </aside>
             <main class="col-md-6 border-left">
-    <article class="content-body">
-    
-    <h2 class="title">{{single_urun.urun_adi}}</h2>
-    
-    <div class="mb-3"> 
-        <var class="price h4">${{single_urun.fiyat}}</var> 
-    </div> 
-    
-    <p>{{single_urun.description}}</p>
-    
-    <hr>
-        <div class="row">
-            <div class="item-option-select">
-                <h6>Choose Color</h6>
-                <div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
-                  <label class="btn btn-light">
-                    <input type="radio" name="radio_color"> Silver
-                  </label>
-                  <label class="btn btn-light">
-                    <input type="radio" name="radio_color" > Gray
-                  </label>
-                  <label class="btn btn-light active">
-                    <input type="radio" name="radio_color checked"> Gold
-                  </label>
-                  <label class="btn btn-light">
-                    <input type="radio" name="radio_color"> Black
-                  </label>
-                </div> 
-            </div>
-        </div> <!-- row.// -->
-        <div class="row">
-            <div class="item-option-select">
-                <h6>Select Size</h6>
-                <div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
-                  <label class="btn btn-light">
-                    <input type="radio" name="radio_color"> S
-                  </label>
-                  <label class="btn btn-light active">
-                    <input type="radio" name="radio_color" checked> M
-                  </label>
-                  <label class="btn btn-light">
-                    <input type="radio" name="radio_color"> L
-                  </label>
-                  <label class="btn btn-light">
-                    <input type="radio" name="radio_color"> XL
-                  </label>
-                </div> 
-            </div>
-        </div> <!-- row.// -->
-        <hr>
-        {% if single_urun.stok <= 0 %}
-          <h5 class="text-danger">Tükendi</h5>
-          {% else %}
-        <a href="store/urun_detail.html" class="btn  btn-primary"> <span class="text">Sepete ekle</span> <i class="fas fa-shopping-cart"></i>  </a>
-          {% endif %}
-    </article> <!-- product-info-aside .// -->
+
+              <form action="{% url 'add_kart' single_urun.id %}" method = "POST">
+                {% csrf_token %}
+                  <article class="content-body">
+                  
+                  <h2 class="title">{{single_urun.urun_adi}}</h2>
+                  <div class="rating-star">
+                    <span>
+                        <i class="fa fa-star{% if single_urun.averagePuanlama < 0.5 %}-o{% elif single_urun.averagePuanlama >= 0.5 and single_urun.averagePuanlama < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
+                        <i class="fa fa-star{% if single_urun.averagePuanlama < 1.5 %}-o{% elif single_urun.averagePuanlama >= 1.5 and single_urun.averagePuanlama < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
+                        <i class="fa fa-star{% if single_urun.averagePuanlama < 2.5 %}-o{% elif single_urun.averagePuanlama >= 2.5 and single_urun.averagePuanlama < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
+                        <i class="fa fa-star{% if single_urun.averagePuanlama < 3.5 %}-o{% elif single_urun.averagePuanlama >= 3.5 and single_urun.averagePuanlama < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
+                        <i class="fa fa-star{% if single_urun.averagePuanlama < 4.5 %}-o{% elif single_urun.averagePuanlama >= 4.5 and single_urun.averagePuanlama < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
+                <span>{{single_urun.countPuanlama}} puanlama</span>
+        
+                    </span>
+
+                   </div> 
+
+                  <div class="mb-3"> 
+                      <var class="price h4">{{single_urun.fiyat}} TL</var> 
+                  </div> 
+                  
+                  <p>{{single_urun.description}}</p>
+                  
+                  <hr>
+                      <div class="row">
+                          <div class="item-option-select">
+                              <h6>Renk seç</h6>
+                              <select name="color"class= "form-control" >
+                                <option value="" disabled selected>Renk seç</option>
+                                {% for i in single_urun.variation_set.colors %}
+                                  <option value="{{i.variation_value  | lower}}">{{i.variation_value | capfirst}}</option>
+                                {% endfor %}
+                              </select>
+                          </div>
+                      </div> 
+                      <div class="row">
+                          <div class="item-option-select">
+                              <h6>Select Size</h6>
+                              <select name="size" class= "form-control">
+                                <option value="" disabled selected>Beden</option>
+                                {% for i in single_urun.variation_set.sizes %}
+                                <option value="{{i.variation_value | lower}}">{{i.variation_value | capfirst}}</option>
+                              {% endfor %}
+                              </select>
+                          </div>
+                      </div>  <!--row.// -->
+                      <hr>
+                  {% if single_urun.stok <= 0 %}
+                      <h5 class="text-danger">Tükendi</h5>
+                    {% else %}
+                      
+                      <button type="sumbit" class="btn  btn-primary"> <span class="text">Sepete ekle</span> <i class="fas fa-shopping-cart"></i>  </button>
+                      
+                    {% endif %}
+                  </article> <!-- product-info-aside .// -->
+              </form>
             </main> <!-- col.// -->
         </div> <!-- row.// -->
     </div> <!-- card.// -->
@@ -86,28 +96,93 @@
     <div class="row">
                 <div class="col-md-9">
     
-        <header class="section-heading">
-            <h3>Customer Reviews </h3>  
+       
+
+        <form action="{% url 'sumbit_puan' single_urun.id %}" method="POST">
+            {% csrf_token %}
+            <h5>Puanlama yap</h5>
+            <div>
+
+                <label>How do you rate this product?</label>
+                <br>
+                <div class="rate">
+                    <input type="radio" name="rating" id="rating10" value="5" required /><label for="rating10" title="5"></label>
+							<input type="radio" name="rating" id="rating9" value="4.5" required /><label for="rating9" title="4.5" class="half"></label>
+							<input type="radio" name="rating" id="rating8" value="4" required /><label for="rating8" title="4"></label>
+							<input type="radio" name="rating" id="rating7" value="3.5" required /><label for="rating7" title="3.5" class="half"></label>
+							<input type="radio" name="rating" id="rating6" value="3" required /><label for="rating6" title="3"></label>
+							<input type="radio" name="rating" id="rating5" value="2.5" required /><label for="rating5" title="2.5" class="half"></label>
+							<input type="radio" name="rating" id="rating4" value="2" required /><label for="rating4" title="2"></label>
+							<input type="radio" name="rating" id="rating3" value="1.5" required /><label for="rating3" title="1.5" class="half"></label>
+							<input type="radio" name="rating" id="rating2" value="1" required /><label for="rating2" title="1"></label>
+							<input type="radio" name="rating" id="rating1" value="0.5" required /><label for="rating1" title="0.5" class="half"></label>
+						</div>
+<br>
+
+
+                                Review Title:
+                                <input type="text" class="form-control" name="subject">
+                                <br>
+                                Review:
+                                <textarea name="review" rows="4" class="form-control"></textarea>
+                                <br>
+
+                                {% if user.is_authenticated %}
+                                        <input type="submit" value="Submit Review" class="btn btn-primary">
+                                {% else %}
+                                <p>You must be logged in to post a review. <span><a href="{% url 'login' %}">Login now</a></span></p>
+                                {% endif %}
+                                <div class="alert alert-danger" role="alert" style="margin-top:10px;">
+                        </div>
             
-        </header>
-    
+        </div>
+{% include 'include/alerts.html' %}
+        </form>
+        <br>
+    <br>
+    <header class="section-heading">
+        <h3>Customer Reviews </h3>  
+        <div class="rating-star">
+            <span>
+                <i class="fa fa-star{% if single_urun.averagePuanlama < 0.5 %}-o{% elif single_urun.averagePuanlama >= 0.5 and single_urun.averagePuanlama < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
+                <i class="fa fa-star{% if single_urun.averagePuanlama < 1.5 %}-o{% elif single_urun.averagePuanlama >= 1.5 and single_urun.averagePuanlama < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
+                <i class="fa fa-star{% if single_urun.averagePuanlama < 2.5 %}-o{% elif single_urun.averagePuanlama >= 2.5 and single_urun.averagePuanlama < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
+                <i class="fa fa-star{% if single_urun.averagePuanlama < 3.5 %}-o{% elif single_urun.averagePuanlama >= 3.5 and single_urun.averagePuanlama < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
+                <i class="fa fa-star{% if single_urun.averagePuanlama < 4.5 %}-o{% elif single_urun.averagePuanlama >= 4.5 and single_urun.averagePuanlama < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
+        <span>{{single_urun.countReview}} reviews</span>
+
+            </span>
+        </div>
+        
+    </header>
+    {% for puanlama in puanlamas  %}
         <article class="box mb-3">
             <div class="icontext w-100">
-                <img src="{% static './images/avatars/avatar1.jpg' %}" class="img-xs icon rounded-circle">
+                
                 <div class="text">
-                    <span class="date text-muted float-md-right">24.04.2020 </span>  
-                    <h6 class="mb-1">Mike John </h6>
+                    <span class="date text-muted float-md-right">{{puanlama.updated_at}}</span>  
+                    <h6 class="mb-1">{{puanlama.user.full_name}} </h6>
+                    <div class="rating-star">
+                        <span>
+                            <i class="fa fa-star{% if puanlama.degerlendirme == 0.5 %}-half-o{% elif puanlama.degerlendirme < 1 %}-o {% endif %}" aria-hidden="true"></i>
+                            <i class="fa fa-star{% if puanlama.degerlendirme == 1.5 %}-half-o{% elif puanlama.degerlendirme < 2 %}-o {% endif %}" aria-hidden="true"></i>
+                            <i class="fa fa-star{% if puanlama.degerlendirme == 2.5 %}-half-o{% elif puanlama.degerlendirme < 3 %}-o {% endif %}" aria-hidden="true"></i>
+                            <i class="fa fa-star{% if puanlama.degerlendirme == 3.5 %}-half-o{% elif puanlama.degerlendirme < 4 %}-o {% endif %}" aria-hidden="true"></i>
+                            <i class="fa fa-star{% if puanlama.degerlendirme == 4.5 %}-half-o{% elif puanlama.degerlendirme < 5 %}-o {% endif %}" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                   
                     
                 </div>
-            </div> <!-- icontext.// -->
+            </div> 
             <div class="mt-3">
+                <h6>{{puanlama.subject}}</h6>
                 <p>
-                    Dummy comment Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                    quis nostrud exercitation ullamco laboris nisi ut aliquip
+                  {{puanlama.puanlama}}
                 </p>	
             </div>
         </article>
+    {% endfor %}
     
         
     

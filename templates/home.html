@@ -1,12 +1,15 @@
 {% extends 'base.html' %}
+
 {% load static %}
+
 {% block content %}
+
 <!-- ========================= SECTION MAIN ========================= -->
 <section class="section-intro padding-y-sm">
 <div class="container">
 
 <div class="intro-banner-wrap">
-	<img src="{% static 'images/banners/1.jpg' %}" class="img-fluid rounded">
+	<img src="{% static 'images/banners/1.jpg' %}" class="img-fluid rounded" >
 </div>
 
 </div> <!-- container //  -->
@@ -16,21 +19,31 @@
 <!-- ========================= SECTION  ========================= -->
 <section class="section-name padding-y-sm">
 <div class="container">
-
 <header class="section-heading">
 	<a href="{% url 'store' %}" class="btn btn-outline-primary float-right">Tümünü gör</a>
-	<h3 class="section-title">Popular products</h3>
-</header><!-- sect-heading -->
+	<h3 class="section-title">Ürünler</h3>
+</header>
 
 	
 <div class="row">
 	{% for urun in urunler %}
-	<div class="col-sm-3">
+	<div class="col-md-3">
 		<div class="card card-product-grid">
-			<a href="{{urun.get_url}}" class="img-wrap"> <img src="{{urun.images.url}}"> </a>
-			<figcaption class="info-wrap">
+			<a href="{{urun.get_url}}" class="img-wrap"> <img src="{{urun.images.url}}"  alt="" style="width:200px;height:200px;"></a>
+			<figcaption class="info-wrap" width="215" height="330">
 				<a href="{{urun.get_url}}" class="title">{{urun.urun_adi}}</a>
-				<div class="price mt-1">${{urun.fiyat}}</div> <!-- price-wrap.// -->
+				<div class="price mt-1">{{urun.fiyat}} TL</div> <!-- price-wrap.// -->
+				<div class="rating-star">
+				<span>
+					<i class="fa fa-star{% if urun.averagePuanlama < 0.5 %}-o{% elif urun.averagePuanlama >= 0.5 and urun.averagePuanlama < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
+					<i class="fa fa-star{% if urun.averagePuanlama < 1.5 %}-o{% elif urun.averagePuanlama >= 1.5 and urun.averagePuanlama < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
+					<i class="fa fa-star{% if urun.averagePuanlama < 2.5 %}-o{% elif urun.averagePuanlama >= 2.5 and urun.averagePuanlama < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
+					<i class="fa fa-star{% if urun.averagePuanlama < 3.5 %}-o{% elif urun.averagePuanlama >= 3.5 and urun.averagePuanlama < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
+					<i class="fa fa-star{% if urun.averagePuanlama < 4.5 %}-o{% elif urun.averagePuanlama >= 4.5 and urun.averagePuanlama < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
+	
+				</span>
+			</div>
+
 			</figcaption>
 		</div>
 	</div>

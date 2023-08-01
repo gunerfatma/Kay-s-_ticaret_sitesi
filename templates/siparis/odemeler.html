@@ -1,0 +1,204 @@
+
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<section class="section-content padding-y bg">
+    <div class="container">
+    
+    <!-- ============================ COMPONENT 1 ================================= -->
+    <h4 class="text-center mb-20">Review Your Order and Make Payment</h4>
+    <div class="row">
+
+        <aside class="col-lg-8">
+            <div class="card">
+                <h5 class="card-header">Adres Faturası</h5>
+                <div class="card-body">             
+                  <p class="card-text mb-0">{{siparis.full_name}}</p> 
+                  <p class="card-text mb-0">{{siparis.full_address}}</p> 
+                  <p class="card-text mb-0">{{siparis.city}}, {{siparis.state}}</p> 
+                  <p class="card-text mb-0">{{siparis.country}}</p>
+                  <p class="card-text mb-0">{{siparis.email}}</p>
+                  <p class="card-text mb-0">{{siparis.phone}}</p> 
+                  {% if siparis.order_note %}
+                  <b>Siparis Notu:</b> {{siparis.order_note}}
+                  {% endif %}
+                </div>
+              </div>
+              <div class="card">
+                <h5 class="card-header">Ödeme Methodu</h5>
+                <div class="card-body">             
+                  <p class="card-text">PayPal</p>  
+                </div>
+              </div>
+
+              <div class="card">
+                <h5 class="card-header">Ürünü puanla</h5>
+                <div class="card-body">             
+                    <table class="table table-borderless table-shopping-cart">
+                        <thead class="text-muted">
+                        <tr class="small text-uppercase">
+                          <th scope="col">Ürün</th>
+                          <th scope="col" width="120">Miktar</th>
+                          <th scope="col" width="120">Fiyat</th>
+                          
+                        </tr>
+                        </thead>
+                        <tbody>
+                        
+                        {% for kart_item in kart_items %}
+                        <tr>
+                            <td>
+                                <figure class="itemside align-items-center">
+                                    <div class="aside"><img src="{{kart_item.urun.images.url}}" class="img-sm" ></div>
+                                    <figcaption class="info">
+                                        <a href="{{ kart_item.urun.get_url }}" class="title text-dark">{{kart_item.urun.urun_adi}}</a>
+                                        <p class="text-muted small">
+                                            {% if kart_item.variations.all %}
+                                              {% for item in kart_item.variations.all  %}
+                                                {{item.variation_category | capfirst}} : {{item.variation_value | capfirst}} <br>
+                                              {% endfor %}
+                                            {% endif %}
+                                        </p>
+                                    </figcaption>
+                                </figure>
+                            </td>
+                            <td> 
+                               <label for="">{{kart_item.Miktar}}></label>
+                            </td>
+                            <td> 
+                                <div class="price-wrap"> 
+                                    <var class="price">{{kart_item.sub_total}} TL</var> 
+                                    <small class="text-muted">{{kart_item.urun.fiyat}} </small> 
+                                </div> <!-- price-wrap .// -->
+                            </td>
+                           
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                        </table>
+       
+                </div>
+              </div>
+    
+        </aside> <!-- col.// -->
+        <aside class="col-lg-4">
+    
+            <div class="card">
+            <div class="card-body">
+                <dl class="dlist-align">
+                  <dt>Toplam fiyat:</dt>
+                  <dd class="text-right">{{total}} TL</dd>
+                </dl>
+                <dl class="dlist-align">
+                  <dt>Tax:</dt>
+                  <dd class="text-right">{{vergi}} TL</dd>
+                </dl>
+                <dl class="dlist-align">
+                  <dt>Toplam:</dt>
+                  <dd class="text-right text-dark b"><strong>{{grand_total}} TL</strong></dd>
+                </dl>
+                <hr>
+                <p class="text-center mb-3">
+                    <img src="{% static './images/misc/payments.png' %}" height="26">
+                </p>
+                <div id="paypal-button-container">
+                    <!-- PayPal Button Will Load -->
+                </div>
+                
+            </div> <!-- card-body.// -->
+            </div> <!-- card.// -->
+            <div class="alert alert-danger" role="alert">
+                <b>Please Note: </b>This is a demo website. Do not try to make real payments.
+            </div>
+    </aside> <!-- col.// -->
+    
+    
+    </div> <!-- row.// -->
+    
+    <!-- ============================ COMPONENT 1 END .// ================================= -->
+    
+    </div> <!-- container .//  -->
+    </section>
+    <!-- ========================= SECTION CONTENT END// ========================= -->
+
+    <script>
+
+            function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+        var amount = "{{ grand_total }}"
+        var url = "{% url 'odemeler' %}"
+        var csrftoken = getCookie('csrftoken');
+        var orderID = "{{siparis.order_number}}"
+        var payment_method = 'PayPal'
+        var redirect_url = "{% url 'siparis_complete' %}"
+        
+        // Render the PayPal button into #paypal-button-container
+        paypal.Buttons({
+    
+            style: {
+                color: 'blue',
+                shape: 'rect',
+                label: 'pay',
+                height: 40
+            },
+    
+            // Set up the transaction
+            createOrder: function(data, actions) {
+                return actions.siparis.create({
+                    purchase_units: [{
+                        amount: {
+                            value: amount,
+                        }
+                    }]
+                });
+            },
+    
+            // Finalize the transaction
+            onApprove: function(data, actions) {
+                return actions.siparis.capture().then(function(details) {
+                    // Show a success message to the buyer
+                    console.log(details);
+                    sendData();
+                    function sendData(){
+                        fetch(url, {
+                            method : "POST",
+                            headers: {
+                                "Content-type": "application/json",
+                                "X-CSRFToken": csrftoken,
+                            },
+                            body: JSON.stringify({
+                                orderID: orderID,
+                                transID: details.id,
+                                payment_method: payment_method,
+                                status: details.status,
+                            }),
+                        })
+                      .then((response) => response.json())
+                      .then((data) => {
+                            window.location.href = redirect_url + '?order_number='+data.order_number+'&payment_id='+data.transID;
+                        });
+                    }
+                });
+            }
+    
+    
+        }).render('#paypal-button-container');
+    </script>
+    
+    {% endblock %}

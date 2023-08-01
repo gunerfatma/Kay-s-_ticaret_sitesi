@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<div class="container" style="margin: 0 auto;width: 50%;padding: 50px;background: #f1f1f1;margin-top: 50px;margin-bottom: 50px;">
+    <div class="row invoice row-printable">
+        <div class="col-md-12">
+          
+            <div class="panel panel-default plain" id="dash_0">
+                
+                <div class="panel-body p30">
+                    <div class="row">
+                        
+                        <div class="col-lg-6">
+                           
+                            <div class="invoice-logo"><img src="{% static '/images/logo.png' %}" alt="Invoice logo" style="max-height: 40px;"></div>
+                        </div>
+                       
+                        <div class="col-lg-6">
+                          
+                            <div class="invoice-from">
+                                <ul class="list-unstyled text-right">
+                                    <li><strong>Invoiced To</strong></li>
+                                    <li>{{siparis.full_name}}</li>
+                                    <li>{{siparis.full_address}}</li>
+                                    <li>{{siparis.city}}, {{siparis.state}}</li>
+                                    <li>{{siparis.country}}</li>
+                                </ul>
+                            </div>
+                        </div>
+                      
+                        <div class="col-lg-12">
+                           
+                            <div class="invoice-details mt25">
+                                <div class="well">
+                                    <ul class="list-unstyled mb0">
+                                        <li><strong>Order</strong> {{siparis.order_number}}</li>
+                                        <li><strong>Transaction ID</strong> {{siparis.payment.payment_id}}</li>
+                                        <li><strong>Order Date:</strong> {{siparis.created_at}}</li>
+                                        <li><strong>Status:</strong> {{siparis.payment.status}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="invoice-items">
+                                <div class="table-responsive" style="overflow: hidden; outline: none;" tabindex="0">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="per70 text-center">Urunler</th>
+                                                <th class="per5 text-center">Qty</th>
+                                                <th class="per25 text-center">Toplam</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for item in siparis_detail %}
+                                            <tr>
+                                                <td>{{item.urun.urun_adi}}</td>
+                                                <p class="text-muted small">
+                                                    {% if item.variations.all %}
+                                                      {% for i in item.variations.all  %}
+                                                        {{i.variation_category | capfirst}} : {{i.variation_value | capfirst}} <br>
+                                                      {% endfor %}
+                                                    {% endif %}
+                                                </p>
+                                            </td>
+                                                <td class="text-center">{{item.Miktar}}</td>
+                                                <td class="text-center">{{item.urun.fiyat}}</td>
+                                            </tr>
+                                            {% endfor %}
+                                           
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="2" class="text-right">Toplam:</th>
+                                                <th class="text-center">{{subtotal}}</th>
+                                            </tr>
+                                            <tr>
+                                                <th colspan="2" class="text-right">Vergi:</th>
+                                                <th class="text-center">{{siparis.tax}}</th>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <th colspan="2" class="text-right">Diğer Toplam:</th>
+                                                <th class="text-center">{{siparis.order_total}}</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="invoice-footer mt25">
+                                <p class="text-center">Thank you for shopping with us!</p>
+                            </div>
+                        </div>
+                        <!-- col-lg-12 end here -->
+                    </div>
+                    <!-- End .row -->
+                </div>
+            </div>
+            <!-- End .panel -->
+        </div>
+        <!-- col-lg-12 end here -->
+    </div>
+    </div>
+
+
+{% endblock %}
