@@ -143,6 +143,14 @@ def activate(request, uidb64, token):
 
 @login_required(login_url = 'login')
 def dashboard(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    try:
+        userprofile = UserProfile.objects.get(user=request.user)
+    except UserProfile.DoesNotExist:
+        userprofile = None
+
     orders = Siparis.objects.order_by('-created_at').filter(user_id=request.user.id, is_ordered=True)
     orders_count = orders.count()
 

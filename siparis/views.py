@@ -12,10 +12,7 @@ import json
 
 
 def odemeler(request):
-    print(request.body)
     body = json.loads(request.body)
-    
-    #body = json.loads(request.body.decode("utf-8"))
     siparis = Siparis.objects.get(user=request.user, is_ordered=False, order_number=body['orderID'])
 
   
@@ -136,6 +133,8 @@ def place_order(request, total=0, quantity=0):
             }
             
             return render(request, 'siparis/odemeler.html', context)             
+        else:
+           return render(request, 'siparis/odemeler.html') 
     else:
         return redirect('checkout')
     

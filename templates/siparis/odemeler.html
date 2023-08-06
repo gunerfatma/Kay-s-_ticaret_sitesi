@@ -8,9 +8,9 @@
     <div class="container">
     
     <!-- ============================ COMPONENT 1 ================================= -->
-    <h4 class="text-center mb-20">Review Your Order and Make Payment</h4>
+    <h4 class="text-center mb-20">Ödemeler ve Detaylar</h4>
+    
     <div class="row">
-
         <aside class="col-lg-8">
             <div class="card">
                 <h5 class="card-header">Adres Faturası</h5>
@@ -82,7 +82,7 @@
                 </div>
               </div>
     
-        </aside> <!-- col.// -->
+        </aside> 
         <aside class="col-lg-4">
     
             <div class="card">
@@ -104,11 +104,11 @@
                     <img src="{% static './images/misc/payments.png' %}" height="26">
                 </p>
                 <div id="paypal-button-container">
-                    <!-- PayPal Button Will Load -->
+                    
                 </div>
                 
-            </div> <!-- card-body.// -->
-            </div> <!-- card.// -->
+            </div> 
+            </div> 
             <div class="alert alert-danger" role="alert">
                 <b>Please Note: </b>This is a demo website. Do not try to make real payments.
             </div>
@@ -160,7 +160,7 @@
     
             // Set up the transaction
             createOrder: function(data, actions) {
-                return actions.siparis.create({
+                return actions.order.create({
                     purchase_units: [{
                         amount: {
                             value: amount,
@@ -169,10 +169,10 @@
                 });
             },
     
-            // Finalize the transaction
+            
             onApprove: function(data, actions) {
-                return actions.siparis.capture().then(function(details) {
-                    // Show a success message to the buyer
+                return actions.order.capture().then(function(details) {
+              
                     console.log(details);
                     sendData();
                     function sendData(){

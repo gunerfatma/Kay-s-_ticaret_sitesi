@@ -11,10 +11,10 @@
     <!-- ============================ COMPONENT 1 ================================= -->
     <div class="card">
         <div class="row no-gutters">
-            <aside class="col-md-3">
+            <aside class="col-md-5">
     <article class="gallery-wrap"> 
         <div class="img-big-wrap mainImage">
-            <center><img src="{{ single_urun.images.url }}"></center>
+            <center><img src="{{ single_urun.images.url }}" ></center>
         </div> 
         
     </article> 
@@ -41,7 +41,7 @@
                         <i class="fa fa-star{% if single_urun.averagePuanlama < 2.5 %}-o{% elif single_urun.averagePuanlama >= 2.5 and single_urun.averagePuanlama < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
                         <i class="fa fa-star{% if single_urun.averagePuanlama < 3.5 %}-o{% elif single_urun.averagePuanlama >= 3.5 and single_urun.averagePuanlama < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
                         <i class="fa fa-star{% if single_urun.averagePuanlama < 4.5 %}-o{% elif single_urun.averagePuanlama >= 4.5 and single_urun.averagePuanlama < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
-                <span>{{single_urun.countPuanlama}} puanlama</span>
+    <span>{{single_urun.countPuanlama}} puanlama</span>
         
                     </span>
 
@@ -53,7 +53,7 @@
                   
                   <p>{{single_urun.description}}</p>
                   
-                  <hr>
+                  {% comment %} <hr>
                       <div class="row">
                           <div class="item-option-select">
                               <h6>Renk seç</h6>
@@ -76,7 +76,8 @@
                               </select>
                           </div>
                       </div>  <!--row.// -->
-                      <hr>
+                      <hr> {% endcomment %}
+
                   {% if single_urun.stok <= 0 %}
                       <h5 class="text-danger">Tükendi</h5>
                     {% else %}
@@ -106,16 +107,16 @@
                 <label>How do you rate this product?</label>
                 <br>
                 <div class="rate">
-                    <input type="radio" name="rating" id="rating10" value="5" required /><label for="rating10" title="5"></label>
-							<input type="radio" name="rating" id="rating9" value="4.5" required /><label for="rating9" title="4.5" class="half"></label>
-							<input type="radio" name="rating" id="rating8" value="4" required /><label for="rating8" title="4"></label>
-							<input type="radio" name="rating" id="rating7" value="3.5" required /><label for="rating7" title="3.5" class="half"></label>
-							<input type="radio" name="rating" id="rating6" value="3" required /><label for="rating6" title="3"></label>
-							<input type="radio" name="rating" id="rating5" value="2.5" required /><label for="rating5" title="2.5" class="half"></label>
-							<input type="radio" name="rating" id="rating4" value="2" required /><label for="rating4" title="2"></label>
-							<input type="radio" name="rating" id="rating3" value="1.5" required /><label for="rating3" title="1.5" class="half"></label>
-							<input type="radio" name="rating" id="rating2" value="1" required /><label for="rating2" title="1"></label>
-							<input type="radio" name="rating" id="rating1" value="0.5" required /><label for="rating1" title="0.5" class="half"></label>
+                    <input type="radio" name="puanlama" id="rating10" value="5" required /><label for="rating10" title="5"></label>
+							<input type="radio" name="puanlama" id="rating9" value="4.5" required /><label for="rating9" title="4.5" class="half"></label>
+							<input type="radio" name="puanlama" id="rating8" value="4" required /><label for="rating8" title="4"></label>
+							<input type="radio" name="puanlama" id="rating7" value="3.5" required /><label for="rating7" title="3.5" class="half"></label>
+							<input type="radio" name="puanlama" id="rating6" value="3" required /><label for="rating6" title="3"></label>
+							<input type="radio" name="puanlama" id="rating5" value="2.5" required /><label for="rating5" title="2.5" class="half"></label>
+							<input type="radio" name="puanlama" id="rating4" value="2" required /><label for="rating4" title="2"></label>
+							<input type="radio" name="puanlama" id="rating3" value="1.5" required /><label for="rating3" title="1.5" class="half"></label>
+							<input type="radio" name="puanlama" id="rating2" value="1" required /><label for="rating2" title="1"></label>
+							<input type="radio" name="puanlama" id="rating1" value="0.5" required /><label for="rating1" title="0.5" class="half"></label>
 						</div>
 <br>
 
@@ -126,13 +127,15 @@
                                 Review:
                                 <textarea name="review" rows="4" class="form-control"></textarea>
                                 <br>
+                               
+                               
 
-                                {% if user.is_authenticated %}
+                                 {% if user.is_authenticated %}
                                         <input type="submit" value="Submit Review" class="btn btn-primary">
                                 {% else %}
                                 <p>You must be logged in to post a review. <span><a href="{% url 'login' %}">Login now</a></span></p>
                                 {% endif %}
-                                <div class="alert alert-danger" role="alert" style="margin-top:10px;">
+                                <div class="alert alert-danger" role="alert" style="margin-top:10px;"> 
                         </div>
             
         </div>
